@@ -1,6 +1,6 @@
 /* =========================================================
-   OUR STORY — JAVASCRIPT
-   Paul ❤️ Mama
+   FOR MAMA — 6 MONTHS
+   JAVASCRIPT
 ========================================================= */
 
 
@@ -10,91 +10,134 @@
 
 const correctPassword = "12032026";
 
+const lockScreen =
+    document.getElementById("lockScreen");
 
-function unlock() {
+const website =
+    document.getElementById("website");
 
-    const input =
-        document.getElementById("password");
+const passwordInput =
+    document.getElementById("password");
 
-    const error =
-        document.getElementById("errorMessage");
+const unlockButton =
+    document.getElementById("unlockButton");
 
-    const lockScreen =
-        document.getElementById("lockScreen");
-
-    const website =
-        document.getElementById("website");
+const errorMessage =
+    document.getElementById("errorMessage");
 
 
-    if (input.value.trim() === correctPassword) {
+/* =========================================================
+   UNLOCK FUNCTION
+========================================================= */
 
-        lockScreen.classList.add("hidden");
+function unlockWebsite() {
 
-        website.classList.remove("hidden");
+    const enteredPassword =
+        passwordInput.value.trim();
 
-        window.scrollTo(0, 0);
 
-        startParticles();
+    /* WRONG PASSWORD */
 
-        observeAnimations();
+    if (enteredPassword !== correctPassword) {
 
-    } else {
-
-        error.textContent =
+        errorMessage.textContent =
             "Hmm... think about the day we became “us.” ❤️";
 
-        input.value = "";
+        passwordInput.value = "";
 
-        input.style.animation =
+        passwordInput.style.animation =
             "shake .3s";
 
         setTimeout(() => {
 
-            input.style.animation = "";
+            passwordInput.style.animation = "";
 
         }, 300);
 
+        return;
     }
 
-}
 
+    /* =====================================================
+       CORRECT PASSWORD
+       SHOW WEBSITE IMMEDIATELY
+    ===================================================== */
 
-/* =========================================================
-   ENTER KEY FOR PASSWORD
-========================================================= */
+    errorMessage.textContent = "";
 
-document
-    .getElementById("password")
-    .addEventListener(
-        "keydown",
-        function(event) {
+    lockScreen.classList.add("hidden");
 
-            if (event.key === "Enter") {
+    website.classList.remove("hidden");
 
-                unlock();
+    document.body.style.overflowX = "hidden";
 
-            }
-
-        }
-    );
-
-
-/* =========================================================
-   SCROLL BUTTON
-========================================================= */
-
-function scrollToSection(id) {
-
-    const section =
-        document.getElementById(id);
-
-    if (!section) return;
-
-    section.scrollIntoView({
-        behavior: "smooth"
+    window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "instant"
     });
 
+
+    /* Start effects */
+
+    startParticles();
+
+    observeAnimations();
 }
+
+
+/* =========================================================
+   UNLOCK BUTTON
+========================================================= */
+
+unlockButton.addEventListener(
+    "click",
+    unlockWebsite
+);
+
+
+/* =========================================================
+   ENTER KEY
+========================================================= */
+
+passwordInput.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+
+            event.preventDefault();
+
+            unlockWebsite();
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ENTER OUR STORY BUTTON
+========================================================= */
+
+const enterStoryButton =
+    document.getElementById(
+        "enterStoryButton"
+    );
+
+const heroSection =
+    document.getElementById("hero");
+
+
+enterStoryButton.addEventListener(
+    "click",
+    function () {
+
+        heroSection.scrollIntoView({
+            behavior: "smooth"
+        });
+
+    }
+);
 
 
 /* =========================================================
@@ -104,39 +147,48 @@ function scrollToSection(id) {
 function observeAnimations() {
 
     const elements =
-        document.querySelectorAll(".fade-up");
+        document.querySelectorAll(
+            ".fade-up"
+        );
 
 
     const observer =
         new IntersectionObserver(
+            function (entries) {
 
-            entries => {
+                entries.forEach(
+                    function (entry) {
 
-                entries.forEach(entry => {
+                        if (
+                            entry.isIntersecting
+                        ) {
 
-                    if (entry.isIntersecting) {
+                            entry.target.classList.add(
+                                "show"
+                            );
 
-                        entry.target.classList.add("show");
+                            observer.unobserve(
+                                entry.target
+                            );
+                        }
 
                     }
-
-                });
+                );
 
             },
-
             {
-                threshold: 0.15
+                threshold: 0.12
             }
-
         );
 
 
-    elements.forEach(element => {
+    elements.forEach(
+        function (element) {
 
-        observer.observe(element);
+            observer.observe(element);
 
-    });
-
+        }
+    );
 }
 
 
@@ -144,10 +196,24 @@ function observeAnimations() {
    FLOATING HEARTS
 ========================================================= */
 
+let particlesStarted = false;
+
+
 function startParticles() {
 
+    /* Prevent multiple particle timers */
+
+    if (particlesStarted) {
+        return;
+    }
+
+    particlesStarted = true;
+
+
     const container =
-        document.getElementById("particles");
+        document.getElementById(
+            "particles"
+        );
 
 
     const symbols = [
@@ -158,61 +224,82 @@ function startParticles() {
     ];
 
 
-    setInterval(() => {
+    setInterval(
+        function () {
 
-        const particle =
-            document.createElement("span");
+            const particle =
+                document.createElement(
+                    "span"
+                );
 
 
-        particle.textContent =
-            symbols[
-                Math.floor(
-                    Math.random() * symbols.length
+            particle.textContent =
+                symbols[
+                    Math.floor(
+                        Math.random()
+                        *
+                        symbols.length
+                    )
+                ];
+
+
+            particle.style.position =
+                "fixed";
+
+            particle.style.left =
+                Math.random() * 100 + "vw";
+
+            particle.style.bottom =
+                "-30px";
+
+            particle.style.fontSize =
+                (
+                    Math.random() * 12
+                    +
+                    10
                 )
-            ];
+                +
+                "px";
+
+            particle.style.opacity =
+                Math.random() * .5 + .2;
+
+            particle.style.transition =
+                "transform 7s linear, opacity 7s linear";
 
 
-        particle.style.position =
-            "fixed";
-
-        particle.style.left =
-            Math.random() * 100 + "vw";
-
-        particle.style.bottom =
-            "-30px";
-
-        particle.style.fontSize =
-            (Math.random() * 12 + 10) + "px";
-
-        particle.style.opacity =
-            Math.random() * .5 + .2;
-
-        particle.style.transition =
-            "transform 7s linear, opacity 7s linear";
+            container.appendChild(
+                particle
+            );
 
 
-        container.appendChild(particle);
+            setTimeout(
+                function () {
+
+                    particle.style.transform =
+                        `translateY(-110vh) translateX(${Math.random() * 100 - 50}px)`;
+
+                    particle.style.opacity =
+                        "0";
+
+                },
+                100
+            );
 
 
-        setTimeout(() => {
+            setTimeout(
+                function () {
 
-            particle.style.transform =
-                `translateY(-110vh) translateX(${Math.random() * 100 - 50}px)`;
+                    particle.remove();
 
-            particle.style.opacity = "0";
-
-        }, 100);
-
-
-        setTimeout(() => {
-
-            particle.remove();
-
-        }, 7200);
+                },
+                7200
+            );
 
 
-    }, 600);
-
+        },
+        700
+    );
 }
 
 
@@ -222,46 +309,55 @@ function startParticles() {
 
 document.addEventListener(
     "click",
-    function(event) {
+    function (event) {
 
         if (
-            event.target.tagName === "BUTTON"
+            event.target.tagName !==
+            "BUTTON"
         ) {
-
-            const heart =
-                document.createElement("div");
-
-
-            heart.textContent =
-                "❤️";
+            return;
+        }
 
 
-            heart.style.position =
-                "fixed";
-
-            heart.style.left =
-                event.clientX + "px";
-
-            heart.style.top =
-                event.clientY + "px";
-
-            heart.style.pointerEvents =
-                "none";
-
-            heart.style.fontSize =
-                "20px";
-
-            heart.style.zIndex =
-                "9999";
-
-            heart.style.transition =
-                "1s ease";
+        const heart =
+            document.createElement(
+                "div"
+            );
 
 
-            document.body.appendChild(heart);
+        heart.textContent =
+            "❤️";
 
 
-            setTimeout(() => {
+        heart.style.position =
+            "fixed";
+
+        heart.style.left =
+            event.clientX + "px";
+
+        heart.style.top =
+            event.clientY + "px";
+
+        heart.style.pointerEvents =
+            "none";
+
+        heart.style.fontSize =
+            "20px";
+
+        heart.style.zIndex =
+            "9999";
+
+        heart.style.transition =
+            "1s ease";
+
+
+        document.body.appendChild(
+            heart
+        );
+
+
+        setTimeout(
+            function () {
 
                 heart.style.transform =
                     "translateY(-80px) scale(1.5)";
@@ -269,16 +365,19 @@ document.addEventListener(
                 heart.style.opacity =
                     "0";
 
-            }, 50);
+            },
+            50
+        );
 
 
-            setTimeout(() => {
+        setTimeout(
+            function () {
 
                 heart.remove();
 
-            }, 1100);
-
-        }
+            },
+            1100
+        );
 
     }
 );
